@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String        @unique
+  SupplyOrder SupplyOrder[]
+}
+
+model SupplyOrder {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  material    String
+  quantity    Int
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String @db.ObjectId
+}
+
+model Batch {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  batch_no      Int
+  global_id     String  @unique
+  routing_no    String
+  item_code     String
+  description   String
+  item_category String
+  cust_name     String
+  cust_type     String?
+  cust_country  String
+  sales_rep     String?
+
+  // Relations
+  increments Increment[]
+}
+
+model Increment {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  batch_no     Int
+  global_id    String
+  increment_id String
+  batch        Batch?   @relation(fields: [global_id], references: [global_id])
+  created_at   DateTime
+  quantity     Float
+}
