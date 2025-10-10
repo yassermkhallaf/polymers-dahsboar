@@ -8,6 +8,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 const ExternalInternalPieChart = ({ externalInternalData }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  console.log(externalInternalData);
   const labels = Object.keys(externalInternalData).map((key) => {
     return key.charAt(0).toUpperCase() + key.slice(1);
   });

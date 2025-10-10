@@ -8,6 +8,7 @@ import ExternalInternalTable from "./external-internal-table";
 import ItemCategoryMapTree from "./charts/item-category-maptree";
 import MachinesBarChar from "./charts/machines-bar-chart";
 const Dashboard = ({ data }) => {
+  console.log(data);
   return (
     <div className="pt-8 ">
       {/* <MapDisplay /> */}
