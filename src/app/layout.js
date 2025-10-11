@@ -9,6 +9,7 @@ import QueryProvider from "@/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { DashboardDataProvider } from "@/features/batches/context/use-dashboard-data-context";
 import { ThemeProvider } from "next-themes";
+import { Suspense } from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -55,7 +56,9 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <QueryProvider>
-            <DashboardDataProvider>{children}</DashboardDataProvider>
+            <DashboardDataProvider>
+              <Suspense>{children}</Suspense>
+            </DashboardDataProvider>
           </QueryProvider>
           <Toaster />
         </ThemeProvider>
