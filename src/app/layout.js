@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
         >
           <QueryProvider>
             <DashboardDataProvider>
-              <Suspense>{children}</Suspense>
+              <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
             </DashboardDataProvider>
           </QueryProvider>
           <Toaster />
