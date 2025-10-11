@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
+import { differenceInDays } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -13,13 +13,17 @@ import {
 } from "@/components/ui/popover";
 import { useDashboardDataContext } from "@/features/batches/context/use-dashboard-data-context";
 import { format } from "date-fns";
-
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 function SelectData({ method }) {
   const { handleChangeDateFrom, handleChangeDateTo, from, to } =
     useDashboardDataContext();
-  useEffect(() => {}, [to]);
+
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(method === "FROM" ? from : to);
+
+  const router = useRouter();
+
   useEffect(() => {
     if (method === "FROM") {
       setDate(from);
@@ -27,6 +31,7 @@ function SelectData({ method }) {
       setDate(to);
     }
   }, [from, to, method]);
+
   return (
     <div className="flex flex-col gap-3 font-montserrat-alternates text-xl">
       <Popover open={open} onOpenChange={setOpen}>
@@ -65,9 +70,11 @@ function SelectData({ method }) {
               setDate(formattedDate);
               setOpen(false);
               if (method === "FROM") {
+                router.push(`?from=${formattedDate}&to=${to}`);
                 handleChangeDateFrom(formattedDate);
               }
               if (method === "TO") {
+                router.push(`?from=${from}&to=${formattedDate}`);
                 handleChangeDateTo(formattedDate);
               }
             }}

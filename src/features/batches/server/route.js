@@ -75,7 +75,7 @@ app
 
       const start = new Date(`${from}T00:00:00.000Z`);
       const end = new Date(`${to}T23:59:59.999Z`);
-      // console.log(start, end);
+
       const rawBachesData = await db.increment.findMany({
         where: {
           created_at: {

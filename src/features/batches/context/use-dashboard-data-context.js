@@ -3,7 +3,8 @@
 import { differenceInDays } from "date-fns";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useGetDashboardData } from "../api/use-get-dashboard-data";
-
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 const DashboardDataContext = createContext(null);
 
 export const useDashboardDataContext = () => {
@@ -14,16 +15,26 @@ export const useDashboardDataContext = () => {
 
 export const DashboardDataProvider = ({ children }) => {
   const [dashboardData, setDashboardData] = useState(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const fromParam = searchParams.get("from");
+  const toParam = searchParams.get("to");
   const thisYear = new Date().getFullYear();
-  const [from, setFrom] = useState(`${thisYear}-01-01`);
-  const [to, setTo] = useState(`${thisYear}-12-31`);
+  const thisMonth = new Date().getMonth();
+  const thisDay = new Date().getDate();
+  const [from, setFrom] = useState(
+    fromParam || `${thisYear}-${thisMonth + 1}-01`
+  );
+  const [to, setTo] = useState(
+    toParam || `${thisYear}-${thisMonth + 1}-${thisDay}`
+  );
   const { data } = useGetDashboardData({ from, to });
+
   useEffect(() => {
     if (data) {
       setDashboardData(data);
     }
   }, [to, from, data]);
-
   const handleChangeDateFrom = (date) => {
     setFrom(date);
     if (differenceInDays(date, to) > 0) {

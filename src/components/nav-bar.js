@@ -5,17 +5,35 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "./Themes-toggle";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 const NavBar = () => {
+  const { theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  const isDark = theme === "dark";
   return (
     <div className="flex gap-3 items-center py-4 justify-between">
       <div className="flex gap-3 items-center">
-        <div className="h-[90px] w-[200px] relative">
-          <Image
-            src="/egyplast_logo.png"
-            alt="Logo"
-            fill
-            className="object-cover object-center"
-          />
+        <div className="h-[90px] w-[210px] relative">
+          {isMounted &&
+            (isDark ? (
+              <Image
+                src="/elsewedy_logo_dark.png"
+                alt="Logo"
+                fill
+                className="object-cover object-center"
+              />
+            ) : (
+              <Image
+                src="/egyplast_logo.png"
+                alt="Logo"
+                fill
+                className="object-cover object-center"
+              />
+            ))}
         </div>
         <Separator
           orientation="vertical"

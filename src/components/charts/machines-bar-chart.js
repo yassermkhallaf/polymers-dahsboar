@@ -40,6 +40,7 @@ export default function RoutingBarChart({ data }) {
         backgroundColor: "#BE2429", // simple blue, can change
         borderRadius: Number.MAX_VALUE,
         borderSkipped: false,
+        borderWidth: 1,
       },
     ],
   };
@@ -56,6 +57,7 @@ export default function RoutingBarChart({ data }) {
       datalabels: {
         anchor: "end",
         align: "end",
+        offset: 0.005,
         color: isDark ? "#fff" : "#000",
         font: {
           weight: isDark ? "200" : "500",
@@ -68,7 +70,9 @@ export default function RoutingBarChart({ data }) {
             0
           );
           const percent = ((value / total) * 100).toFixed(0);
-          return `${value.toLocaleString()}\n(${percent}%)`;
+          return `${(value / 1000)
+            .toFixed(2)
+            .toLocaleString()} Ton\n(${percent}%)`;
         },
       },
       legend: { display: false },
@@ -80,7 +84,11 @@ export default function RoutingBarChart({ data }) {
         borderWidth: 1,
         borderColor: "#BE2429",
         padding: 12,
-
+        titleFont: {
+          size: 16,
+          weight: "bold",
+          family: "Montserrat Alternates",
+        },
         bodyFont: {
           size: 16,
           weight: "bold",
@@ -90,10 +98,10 @@ export default function RoutingBarChart({ data }) {
         callbacks: {
           label: function (context) {
             let value = context.raw;
-            return `Quantity: ${value.toLocaleString("en-US", {
+            return `${(value / 1000).toFixed(2).toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
-            })}`;
+            })} Ton`;
           },
         },
       },
@@ -114,7 +122,7 @@ export default function RoutingBarChart({ data }) {
           },
           font: {
             size: 12,
-            weight: "700",
+            weight: "500",
             family: "Roboto Mono",
           },
           color: isDark ? "#fff" : "#000",
@@ -130,28 +138,26 @@ export default function RoutingBarChart({ data }) {
           },
         },
         grid: {
-          drawTicks: true,
+          display: true,
           drawBorder: true,
-          // color: () => "transparent",
-          borderColor: isDark ? "#fff" : "#000", // ✅ خط المحور
-          borderWidth: 3,
+          borderColor: isDark ? "#D1D5DC" : "#1D1616",
+          color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.05)",
         },
       },
       x: {
         ticks: {
           color: isDark ? "#fff" : "#000", // x-axis label color
           font: {
-            size: 16,
+            size: 12,
             weight: "700",
             family: "Montserrat Alternates",
           },
         },
         grid: {
-          drawTicks: true,
+          display: true,
           drawBorder: true,
-          // color: () => "transparent",
-          borderColor: isDark ? "#fff" : "#000", // ✅ خط المحور
-          borderWidth: 3,
+          borderColor: isDark ? "#D1D5DC" : "#1D1616",
+          color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.05)",
         },
       },
     },

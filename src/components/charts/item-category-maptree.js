@@ -2,7 +2,7 @@
 
 import { ResponsiveTreeMap } from "@nivo/treemap";
 import { useTheme } from "next-themes";
-const ItemCategoryMapTree = ({ categoryData }) => {
+const ItemCategoryMapTree = ({ categoryData, height }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const nivoData = {
@@ -16,7 +16,10 @@ const ItemCategoryMapTree = ({ categoryData }) => {
   };
   return (
     <div>
-      <div className="w-full h-[310px]  shadow-md ">
+      <div
+        className={`w-full  rounded-lg   shadow-md `}
+        style={{ height: height - 20, borderRadius: "10px" }}
+      >
         <ResponsiveTreeMap
           data={nivoData}
           identity="name"
@@ -95,9 +98,9 @@ const ItemCategoryMapTree = ({ categoryData }) => {
           tooltip={({ node }) => {
             const { id, value, color } = node;
             return (
-              <div className="bg-black text-white p-2 rounded">
+              <div className="bg-black text-white p-2 h-[50px] w-[180px] rounded">
                 <strong>
-                  {id}: {value.toLocaleString()}
+                  {id}: {(value / 1000).toFixed(2).toLocaleString()} Ton
                 </strong>
               </div>
             );
