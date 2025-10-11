@@ -1,6 +1,6 @@
 "use client";
 import Dashboard from "@/components/dashboard";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useDashboardDataContext } from "@/features/batches/context/use-dashboard-data-context";
 import { useGetDashboardData } from "@/features/batches/api/use-get-dashboard-data";
 
@@ -13,7 +13,9 @@ const DashboardPage = () => {
   }
   return (
     <>
-      <Dashboard data={data} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Dashboard data={data} />
+      </Suspense>
     </>
   );
 };

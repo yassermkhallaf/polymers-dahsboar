@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { DashboardDataProvider } from "@/features/batches/context/use-dashboard-data-context";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -55,11 +56,11 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            <DashboardDataProvider>
-              <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
-            </DashboardDataProvider>
-          </QueryProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <QueryProvider>
+              <DashboardDataProvider>{children}</DashboardDataProvider>
+            </QueryProvider>
+          </Suspense>
           <Toaster />
         </ThemeProvider>
       </body>

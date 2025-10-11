@@ -16,7 +16,7 @@ export const useDashboardDataContext = () => {
 export const DashboardDataProvider = ({ children }) => {
   const [dashboardData, setDashboardData] = useState(null);
   const searchParams = useSearchParams();
-  const router = useRouter();
+
   const fromParam = searchParams.get("from");
   const toParam = searchParams.get("to");
   const thisYear = new Date().getFullYear();

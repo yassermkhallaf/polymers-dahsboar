@@ -14,10 +14,14 @@ import {
 import { useDashboardDataContext } from "@/features/batches/context/use-dashboard-data-context";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+
 function SelectData({ method }) {
-  const { handleChangeDateFrom, handleChangeDateTo, from, to } =
-    useDashboardDataContext();
+  const {
+    handleChangeDateFrom,
+    handleChangeDateTo,
+    from,
+    to,
+  } = useDashboardDataContext();
 
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(method === "FROM" ? from : to);

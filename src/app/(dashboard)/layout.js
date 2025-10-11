@@ -1,8 +1,6 @@
 import NavBar from "@/components/nav-bar";
 import { DashboardDataProvider } from "@/features/batches/context/use-dashboard-data-context";
 
-import { redirect } from "next/navigation";
-
 export const metadata = {
   title: "Dashboard",
   description: "Dashboard",
@@ -10,12 +8,12 @@ export const metadata = {
 
 const DashboardLayout = async ({ children, searchParams }) => {
   return (
-    <DashboardDataProvider>
-      <div className="max-w-[90%] mx-auto h-screen">
+    <div className="max-w-[90%] mx-auto h-screen">
+      <DashboardDataProvider>
         <NavBar />
         {children}
-      </div>
-    </DashboardDataProvider>
+      </DashboardDataProvider>
+    </div>
   );
 };
 
