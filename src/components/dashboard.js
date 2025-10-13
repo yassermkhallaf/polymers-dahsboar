@@ -11,16 +11,18 @@ import { Factory, FactoryIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import CategoryBarChart from "./charts/category-bar-chart";
-const Dashboard = ({ data }) => {
-  console.log(data);
+import { useDashboardDataContext } from "@/features/batches/context/use-dashboard-data-context";
+const Dashboard = () => {
   const mapTreeCardRef = useRef(null);
+  const { dashboardData: data } = useDashboardDataContext();
+  console.log(data);
   const lightColors = data?.categoryData.filter((item) =>
     ["White", "Natural"].includes(item.category)
   );
   const darkColors = data?.categoryData.filter(
     (item) => !["White", "Natural"].includes(item.category)
   );
-  console.log(lightColors, darkColors);
+
   const [mapTreeCardHeight, setMapTreeCardHeight] = useState(0);
   const [mapTreeCardWidth, setMapTreeCardWidth] = useState(0);
   useEffect(() => {

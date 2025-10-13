@@ -5,16 +5,30 @@ import { useDashboardDataContext } from "@/features/batches/context/use-dashboar
 import { useGetDashboardData } from "@/features/batches/api/use-get-dashboard-data";
 
 const DashboardPage = () => {
-  const { from, to } = useDashboardDataContext();
+  const {
+    from,
+    to,
+    handlePreparingData,
+    isPreparingData,
+    dashboardData,
+    setBatches,
+  } = useDashboardDataContext();
   const { data, isLoading } = useGetDashboardData({ from, to });
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      setBatches(data.batches);
+      handlePreparingData(data.batches);
+    }
+  }, [data, handlePreparingData, setBatches]);
 
-  if (isLoading) {
+  if (isLoading || isPreparingData || !dashboardData) {
     return <div>Loading...</div>;
   }
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
-        <Dashboard data={data} />
+        <Dashboard />
       </Suspense>
     </>
   );

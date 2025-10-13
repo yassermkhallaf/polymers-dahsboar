@@ -2,7 +2,9 @@
 
 import { ResponsiveTreeMap } from "@nivo/treemap";
 import { useTheme } from "next-themes";
+import { useDashboardDataContext } from "@/features/batches/context/use-dashboard-data-context";
 const ItemCategoryMapTree = ({ categoryData, height, width }) => {
+  const { handleQueryData } = useDashboardDataContext();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -22,6 +24,9 @@ const ItemCategoryMapTree = ({ categoryData, height, width }) => {
         style={{ height: height - 50, borderRadius: "10px", width: width - 50 }}
       >
         <ResponsiveTreeMap
+          onClick={(node, event) => {
+            handleQueryData("item_category", node.data.name);
+          }}
           data={nivoData}
           identity="name"
           value="value"

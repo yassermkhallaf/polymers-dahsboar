@@ -6,7 +6,7 @@ export const metadata = {
   description: "Dashboard",
 };
 
-const DashboardLayout = async ({ children, searchParams }) => {
+const DashboardLayout = async ({ children }) => {
   return (
     <div className="max-w-[90%] mx-auto h-screen">
       <DashboardDataProvider>
