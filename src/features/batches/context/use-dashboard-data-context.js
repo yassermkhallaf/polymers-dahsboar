@@ -189,8 +189,6 @@ export const DashboardDataProvider = ({ children }) => {
     });
   };
   useEffect(() => {
-    console.log(query);
-    console.log(batches);
     const categoriesArray = query.item_category || [];
     if (batches) {
       const updatedBatches = batches.filter((item) =>

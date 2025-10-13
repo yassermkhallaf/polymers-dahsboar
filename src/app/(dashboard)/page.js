@@ -15,7 +15,6 @@ const DashboardPage = () => {
   } = useDashboardDataContext();
   const { data, isLoading } = useGetDashboardData({ from, to });
   useEffect(() => {
-    console.log(data);
     if (data) {
       setBatches(data.batches);
       handlePreparingData(data.batches);

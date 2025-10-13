@@ -15,7 +15,7 @@ import { useDashboardDataContext } from "@/features/batches/context/use-dashboar
 const Dashboard = () => {
   const mapTreeCardRef = useRef(null);
   const { dashboardData: data } = useDashboardDataContext();
-  console.log(data);
+
   const lightColors = data?.categoryData.filter((item) =>
     ["White", "Natural"].includes(item.category)
   );
@@ -37,7 +37,7 @@ const Dashboard = () => {
         <div className="flex  items-center text-[rgb(190,36,41)] flex-col">
           <span
             className={cn(
-              "text-[8vh] tracking-wide font-bold font-roboto-mono ",
+              "text-[4vw] font-bold font-roboto-mono ",
               isDark ? "text-shadow-lg-dark" : "text-shadow-lg-light "
             )}
           >
@@ -48,7 +48,7 @@ const Dashboard = () => {
           </span>
           <span
             className={cn(
-              "text-2xl self-end font-semibold font-montserrat-alternates uppercase -mt-5",
+              "text-[2vw] self-end font-semibold font-montserrat-alternates uppercase -mt-2",
               isDark ? "text-white" : "text-black"
             )}
           >
