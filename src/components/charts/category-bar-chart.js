@@ -23,11 +23,11 @@ ChartJS.register(
   ChartDataLabels
 );
 
-export default function RoutingBarChart({ data }) {
+export default function CategoryBarChart({ data }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const sortedData = data.sort((a, b) => b.value - a.value);
-  const labels = sortedData.map((d) => d.routingName);
+  const labels = sortedData.map((d) => d.categoryName);
 
   const values = sortedData.map((d) => d.value);
 
@@ -39,27 +39,28 @@ export default function RoutingBarChart({ data }) {
         data: values,
         backgroundColor: "#BE2429", // simple blue, can change
         borderRadius: Number.MAX_VALUE,
-        borderSkipped: false,
-        borderWidth: 2,
         barThickness: 40,
+        borderSkipped: false,
+        borderWidth: 1.5,
         borderColor: isDark ? "#fff" : "#000",
       },
     ],
   };
 
   const options = {
-    indexAxis: "x", // 👉 makes it horizontal
+    indexAxis: "y", // 👉 makes it horizontal
     responsive: true,
     maintainAspectRatio: false,
-    interaction: {
-      mode: "index", // show tooltip for the dataset at the same index
-      intersect: false, // allow hover in the area, not just exactly on the point
-    },
+    // interaction: {
+    //   mode: "index", // show tooltip for the dataset at the same index
+    //   intersect: false, // allow hover in the area, not just exactly on the point
+    // },
     plugins: {
       datalabels: {
-        anchor: "end",
-        align: "end",
-        offset: 0.005,
+        display: false,
+        anchor: "center",
+        align: "center",
+
         color: isDark ? "#fff" : "#000",
         font: {
           weight: isDark ? "200" : "500",
@@ -72,10 +73,9 @@ export default function RoutingBarChart({ data }) {
             0
           );
           const percent = ((value / total) * 100).toFixed(0);
-          return `${(value / 1000).toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })} Ton\n(${percent}%)`;
+          return `${(value / 1000)
+            .toFixed(2)
+            .toLocaleString()} Ton\n(${percent}%)`;
         },
       },
       legend: { display: false },
@@ -101,10 +101,15 @@ export default function RoutingBarChart({ data }) {
         callbacks: {
           label: function (context) {
             let value = context.raw;
+            const total = context.chart.data.datasets[0].data.reduce(
+              (a, b) => a + b,
+              0
+            );
+            const percent = ((value / total) * 100).toFixed(0);
             return `${(value / 1000).toFixed(2).toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
-            })} Ton`;
+            })} Ton \n (${percent}%)`;
           },
         },
       },
@@ -116,17 +121,13 @@ export default function RoutingBarChart({ data }) {
         suggestedMax: (ctx) => {
           // نجيب أعلى قيمة في الداتا ونزود عليها 100
           const data = ctx.chart.data.datasets[0].data;
-          return Math.max(...data) + 200;
+          return Math.max(...data);
         },
         ticks: {
-          callback: function (value) {
-            // نحول من كجم إلى طن
-            return (value / 1000).toFixed(0);
-          },
           font: {
-            size: 12,
-            weight: "500",
-            family: "Roboto Mono",
+            size: 25,
+            weight: "700",
+            family: "Montserrat Alternates",
           },
           color: isDark ? "#fff" : "#000",
           //   stepSize: 1000,
@@ -141,24 +142,29 @@ export default function RoutingBarChart({ data }) {
           },
         },
         grid: {
-          display: true,
-          drawBorder: true,
+          display: false,
+          drawBorder: false,
           borderColor: isDark ? "#D1D5DC" : "#1D1616",
           color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.05)",
         },
       },
       x: {
         ticks: {
+          display: false,
           color: isDark ? "#fff" : "#000", // x-axis label color
+          callback: function (value) {
+            // نحول من كجم إلى طن
+            return (value / 1000).toFixed(0);
+          },
           font: {
             size: 12,
-            weight: "700",
-            family: "Montserrat Alternates",
+            weight: "500",
+            family: "Roboto Mono",
           },
         },
         grid: {
-          display: true,
-          drawBorder: true,
+          display: false,
+          drawBorder: false,
           borderColor: isDark ? "#D1D5DC" : "#1D1616",
           color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.05)",
         },
@@ -167,7 +173,7 @@ export default function RoutingBarChart({ data }) {
   };
 
   return (
-    <div className="h-[100%] w-full">
+    <div className="h-[100%] my-auto w-full ">
       <Bar data={chartData} options={options} />
     </div>
   );

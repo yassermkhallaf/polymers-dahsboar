@@ -122,3 +122,9 @@
     @apply bg-background text-foreground;
   }
 }
+.text-shadow-lg-light {
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.35);
+}
+.text-shadow-lg-dark {
+  text-shadow: 2px 4px 8px rgba(255, 255, 255, 0.4);
+}
