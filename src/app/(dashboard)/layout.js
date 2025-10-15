@@ -8,7 +8,7 @@ export const metadata = {
 
 const DashboardLayout = async ({ children }) => {
   return (
-    <div className="max-w-[90%] mx-auto h-screen">
+    <div className="max-w-[95%] mx-auto h-screen">
       <DashboardDataProvider>
         <NavBar />
         {children}

@@ -24,6 +24,7 @@ export const DashboardDataProvider = ({ children }) => {
   const [batches, setBatches] = useState(null);
   const [query, setQuery] = useState({});
   const [isPreparingData, setIsPreparingData] = useState(false);
+  const [activePage, setActivePage] = useState("production");
   const searchParams = useSearchParams();
 
   const fromParam = searchParams.get("from");
@@ -210,6 +211,8 @@ export const DashboardDataProvider = ({ children }) => {
         setFrom,
         handleQueryData,
         to,
+        activePage,
+        setActivePage,
         handlePreparingData,
         handleChangeDateFrom,
         handleChangeDateTo,
