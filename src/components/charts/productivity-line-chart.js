@@ -49,7 +49,7 @@ const ProductivityLineChart = ({ batches }) => {
     const allDays = eachDayOfInterval({ start: fromDate, end: toDate });
     formattedLabels = allDays.map((day) => format(day, "yyyy-MM-dd"));
 
-    totalsByPeriod = batches.reduce((acc, item) => {
+    totalsByPeriod = batches?.reduce((acc, item) => {
       const day = format(subDays(new Date(item.created_at), 1), "yyyy-MM-dd");
       acc[day] = (acc[day] || 0) + item.quantity;
       return acc;

@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import { ZoomOut } from "lucide-react";
 import { cn } from "@/lib/utils.js";
 import CountriesBarChart from "./charts/countries-bar-chart.js";
+import CountryCard from "./country-card.js";
 gsap.registerPlugin(Draggable);
 const countries = [
   "Egypt",
@@ -48,6 +49,7 @@ const countries = [
 ];
 const MapDisplay = () => {
   const { from, to, dashboardData } = useDashboardDataContext();
+  console.log(dashboardData);
   const countriesArray = dashboardData?.customerCountryData
     .filter((country) => country.customerCountry !== "Egypt")
     .map((country) => country.customerCountry);
@@ -55,11 +57,11 @@ const MapDisplay = () => {
   const [isMounted, setIsMounted] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [startZooming, setStartZooming] = useState(false);
-  // const [zoom, setZoom] = useState(1);
+
+  const [zoom, setZoom] = useState(1);
   const mapRef = useRef();
   const gRef = useRef();
-  let zoom = 1;
+
   let pan = { x: 0, y: 0 };
   const tooltipRef = useRef();
   const [tooltipData, setTooltipData] = useState({
@@ -70,16 +72,14 @@ const MapDisplay = () => {
   });
   useGSAP(() => {
     // focusOnCountry("Egypt", 3, 1.5);
-    if (startZooming) {
-      return;
-    }
+
     if (!isMounted) return;
     gsap.fromTo(
       mapRef.current.querySelectorAll("path"),
       { opacity: 0, scale: 0.8 },
       {
         opacity: 1,
-        scale: 1,
+        scale: zoom,
         duration: 0.8,
         stagger: 0.005, // small delay per country
         ease: "power2.out",
@@ -136,6 +136,7 @@ const MapDisplay = () => {
       transformOrigin: "0 0",
       ease: "power2.inOut",
     });
+    setZoom(1);
   };
 
   const handleMouseEnter = (e) => {
@@ -294,18 +295,39 @@ const MapDisplay = () => {
       </div>
 
       <div
-        className="flex flex-col gap-2 overflow-auto h-[100%] flex-2 "
-        style={{ height: mapRef?.current?.clientHeight }}
+        className="flex flex-col gap-2  h-[100%] flex-2 "
+        style={{
+          height: mapRef?.current?.clientHeight,
+        }}
       >
-        <CountriesBarChart
-          data={dashboardData?.customerCountryData.filter(
-            (country) => country.customerCountry !== "Egypt"
-          )}
-          onClick={(country) => {
-            focusOnCountry(country);
-            setActiveCountry(country);
-          }}
-        />
+        {activeCountry ? (
+          <div>
+            <CountryCard
+              activeCountry={activeCountry}
+              cardHeight={mapRef?.current?.clientHeight}
+              countryCategoryData={dashboardData?.countryCategoryData.filter(
+                (country) => country.country === activeCountry
+              )}
+              countryCustomerData={dashboardData?.countryCustomerData.filter(
+                (country) => country.country === activeCountry
+              )}
+              onBack={() => {
+                setActiveCountry(null);
+                resetZoom();
+              }}
+            />
+          </div>
+        ) : (
+          <CountriesBarChart
+            data={dashboardData?.customerCountryData.filter(
+              (country) => country.customerCountry !== "Egypt"
+            )}
+            onClick={(country) => {
+              focusOnCountry(country);
+              setActiveCountry(country);
+            }}
+          />
+        )}
       </div>
 
       {tooltipData.visible && (

@@ -49,8 +49,128 @@ export const DashboardDataProvider = ({ children }) => {
     setTo(date);
   };
 
+  // const handlePreparingData = useCallback((batches) => {
+  //   console.log(batches);
+  //   setIsPreparingData(true);
+  //   const routingNames = [
+  //     "C1",
+  //     "C2",
+  //     "J1",
+  //     "J2",
+  //     "J3",
+  //     "L1",
+  //     "L2",
+  //     "L3",
+  //     "L4",
+  //     "L7",
+  //   ];
+
+  //   const routingNamesMap = new Map();
+  //   routingNames.forEach((routingName) => {
+  //     routingNamesMap.set(routingName, 0);
+  //   });
+  //   batches.forEach((batch) => {
+  //     const qty = batch.quantity;
+  //     const routingName = batch.routing_no;
+  //     if (routingName) {
+  //       routingNamesMap.set(
+  //         routingName,
+  //         routingNamesMap.get(routingName) + qty
+  //       );
+  //     }
+  //   });
+  //   const categoryMap = new Map();
+  //   batches.forEach((batch) => {
+  //     const category = batch.item_category;
+  //     if (category) {
+  //       categoryMap.set(
+  //         category,
+  //         (categoryMap.get(category) || 0) + batch.quantity
+  //       );
+  //     }
+  //   });
+  //   const customerTypeMap = new Map();
+  //   batches.forEach((batch) => {
+  //     const customerType = batch.cust_type;
+
+  //     if (customerType) {
+  //       customerTypeMap.set(
+  //         customerType,
+  //         (customerTypeMap.get(customerType) || 0) + batch.quantity
+  //       );
+  //     }
+  //   });
+  //   const customerCountryMap = new Map();
+  //   batches.forEach((batch) => {
+  //     const customerCountry = batch.cust_country;
+  //     if (customerCountry) {
+  //       customerCountryMap.set(
+  //         customerCountry,
+  //         (customerCountryMap.get(customerCountry) || 0) + batch.quantity
+  //       );
+  //     }
+  //   });
+  //   const salesRepMap = new Map();
+  //   batches.forEach((batch) => {
+  //     const salesRep = batch.sales_rep;
+  //     if (salesRep) {
+  //       salesRepMap.set(
+  //         salesRep,
+  //         (salesRepMap.get(salesRep) || 0) + batch.quantity
+  //       );
+  //     }
+  //   });
+  //   const totalQty = batches.reduce(
+  //     (total, batch) => total + batch.quantity,
+  //     0
+  //   );
+  //   const customerTypeObj = { external: 0, internal: 0 };
+  //   batches.forEach((batch, i) => {
+  //     if (batch.cust_type === "External") {
+  //       customerTypeObj.external += batch.quantity;
+  //     } else {
+  //       customerTypeObj.internal += batch.quantity;
+  //     }
+  //   });
+  //   setDashboardData({
+  //     customerTypeObj,
+  //     totalQty,
+  //     customerType: Array.from(customerTypeObj, ([key, value]) => {
+  //       return {
+  //         type: key,
+  //         value,
+  //       };
+  //     }),
+  //     batches,
+  //     routingData: Array.from(routingNamesMap, ([routingName, qty]) => ({
+  //       routingName,
+  //       value: qty,
+  //     })),
+  //     categoryData: Array.from(categoryMap, ([category, qty]) => ({
+  //       category,
+  //       value: qty,
+  //     })),
+  //     customerTypeData: Array.from(customerTypeMap, ([customerType, qty]) => ({
+  //       customerType,
+  //       value: qty,
+  //     })),
+  //     customerCountryData: Array.from(
+  //       customerCountryMap,
+  //       ([customerCountry, qty]) => ({
+  //         customerCountry,
+  //         value: qty,
+  //       })
+  //     ),
+  //     salesRepData: Array.from(salesRepMap, ([salesRep, qty]) => ({
+  //       salesRep,
+  //       value: qty,
+  //     })),
+  //   });
+  //   setIsPreparingData(false);
+  // }, []);
   const handlePreparingData = useCallback((batches) => {
     setIsPreparingData(true);
+
     const routingNames = [
       "C1",
       "C2",
@@ -63,110 +183,157 @@ export const DashboardDataProvider = ({ children }) => {
       "L4",
       "L7",
     ];
-
-    const routingNamesMap = new Map();
-    routingNames.forEach((routingName) => {
-      routingNamesMap.set(routingName, 0);
-    });
-    batches.forEach((batch) => {
-      const qty = batch.quantity;
-      const routingName = batch.routing_no;
-      if (routingName) {
-        routingNamesMap.set(
-          routingName,
-          routingNamesMap.get(routingName) + qty
-        );
-      }
-    });
+    const routingNamesMap = new Map(routingNames.map((r) => [r, 0]));
     const categoryMap = new Map();
-    batches.forEach((batch) => {
-      const category = batch.item_category;
-      if (category) {
-        categoryMap.set(
-          category,
-          (categoryMap.get(category) || 0) + batch.quantity
-        );
-      }
-    });
     const customerTypeMap = new Map();
-    batches.forEach((batch) => {
-      const customerType = batch.cust_type;
-
-      if (customerType) {
-        customerTypeMap.set(
-          customerType,
-          (customerTypeMap.get(customerType) || 0) + batch.quantity
-        );
-      }
-    });
     const customerCountryMap = new Map();
-    batches.forEach((batch) => {
-      const customerCountry = batch.cust_country;
-      if (customerCountry) {
-        customerCountryMap.set(
-          customerCountry,
-          (customerCountryMap.get(customerCountry) || 0) + batch.quantity
-        );
-      }
-    });
     const salesRepMap = new Map();
-    batches.forEach((batch) => {
-      const salesRep = batch.sales_rep;
-      if (salesRep) {
-        salesRepMap.set(
-          salesRep,
-          (salesRepMap.get(salesRep) || 0) + batch.quantity
+    const customerTypeObj = { external: 0, internal: 0 };
+    let totalQty = 0;
+
+    // 🆕 Nested maps per country
+    const countryCategoryMap = new Map(); // country -> Map(category -> qty)
+    const countryCustomerMap = new Map(); // country -> Map(customer -> qty)
+
+    for (const batch of batches) {
+      const {
+        quantity,
+        routing_no,
+        item_category,
+        cust_type,
+        cust_country,
+        cust_name,
+        sales_rep,
+      } = batch;
+
+      totalQty += quantity;
+
+      if (routing_no && routingNamesMap.has(routing_no)) {
+        routingNamesMap.set(
+          routing_no,
+          routingNamesMap.get(routing_no) + quantity
         );
       }
-    });
-    const totalQty = batches.reduce(
-      (total, batch) => total + batch.quantity,
-      0
-    );
-    const customerTypeObj = { external: 0, internal: 0 };
-    batches.forEach((batch, i) => {
-      if (batch.cust_type === "External") {
-        customerTypeObj.external += batch.quantity;
-      } else {
-        customerTypeObj.internal += batch.quantity;
+
+      if (item_category) {
+        categoryMap.set(
+          item_category,
+          (categoryMap.get(item_category) || 0) + quantity
+        );
       }
-    });
-    setDashboardData({
-      customerTypeObj,
+
+      if (cust_type) {
+        customerTypeMap.set(
+          cust_type,
+          (customerTypeMap.get(cust_type) || 0) + quantity
+        );
+        if (cust_type === "External") {
+          customerTypeObj.external += quantity;
+        } else {
+          customerTypeObj.internal += quantity;
+        }
+      }
+
+      if (cust_country) {
+        customerCountryMap.set(
+          cust_country,
+          (customerCountryMap.get(cust_country) || 0) + quantity
+        );
+
+        // 🧩 Category by country
+        if (!countryCategoryMap.has(cust_country)) {
+          countryCategoryMap.set(cust_country, new Map());
+        }
+        const categoryByCountry = countryCategoryMap.get(cust_country);
+        if (item_category) {
+          categoryByCountry.set(
+            item_category,
+            (categoryByCountry.get(item_category) || 0) + quantity
+          );
+        }
+
+        // 🧩 Customer by country
+        if (!countryCustomerMap.has(cust_country)) {
+          countryCustomerMap.set(cust_country, new Map());
+        }
+        const customerByCountry = countryCustomerMap.get(cust_country);
+        if (cust_name) {
+          customerByCountry.set(
+            cust_name,
+            (customerByCountry.get(cust_name) || 0) + quantity
+          );
+        }
+      }
+
+      if (sales_rep) {
+        salesRepMap.set(
+          sales_rep,
+          (salesRepMap.get(sales_rep) || 0) + quantity
+        );
+      }
+    }
+
+    // ✅ Convert nested maps to structured arrays
+    const countryCategoryData = Array.from(
+      countryCategoryMap,
+      ([country, catMap]) => ({
+        country,
+        categories: Array.from(catMap, ([category, qty]) => ({
+          category,
+          qty,
+        })),
+      })
+    );
+
+    const countryCustomerData = Array.from(
+      countryCustomerMap,
+      ([country, custMap]) => ({
+        country,
+        customers: Array.from(custMap, ([customer, qty]) => ({
+          customer,
+          qty,
+        })),
+      })
+    );
+
+    const dashboardData = {
       totalQty,
-      customerType: Array.from(customerTypeObj, ([key, value]) => {
-        return {
-          type: key,
-          value,
-        };
-      }),
       batches,
-      routingData: Array.from(routingNamesMap, ([routingName, qty]) => ({
+      customerTypeObj,
+      routingData: Array.from(routingNamesMap, ([routingName, value]) => ({
         routingName,
-        value: qty,
+        value,
       })),
-      categoryData: Array.from(categoryMap, ([category, qty]) => ({
+      categoryData: Array.from(categoryMap, ([category, value]) => ({
         category,
-        value: qty,
+        value,
       })),
-      customerTypeData: Array.from(customerTypeMap, ([customerType, qty]) => ({
-        customerType,
-        value: qty,
-      })),
-      customerCountryData: Array.from(
-        customerCountryMap,
-        ([customerCountry, qty]) => ({
-          customerCountry,
-          value: qty,
+      customerTypeData: Array.from(
+        customerTypeMap,
+        ([customerType, value]) => ({
+          customerType,
+          value,
         })
       ),
-      salesRepData: Array.from(salesRepMap, ([salesRep, qty]) => ({
+      customerCountryData: Array.from(
+        customerCountryMap,
+        ([customerCountry, value]) => ({
+          customerCountry,
+          value,
+        })
+      ),
+      salesRepData: Array.from(salesRepMap, ([salesRep, value]) => ({
         salesRep,
-        value: qty,
+        value,
       })),
-    });
+      countryCategoryData, // 🆕 Country → Category breakdown
+      countryCustomerData, // 🆕 Country → Customer breakdown
+    };
+    console.log(dashboardData);
+    setDashboardData(dashboardData);
     setIsPreparingData(false);
   }, []);
+
   const handleQueryData = (field, value) => {
     setQuery((prev) => {
       if (prev[field]) {
